@@ -127,3 +127,24 @@ FILE = "data.pth"
 torch.save(data, FILE)
 
 print(f'training complete. file saved to {FILE}')
+
+# Save in JSON format for NumPy deployment without PyTorch
+json_model_state = {}
+for key, tensor in model.state_dict().items():
+    json_model_state[key] = tensor.tolist()
+
+json_data = {
+    "model_state": json_model_state,
+    "input_size": input_size,
+    "hidden_size": hidden_size,
+    "output_size": output_size,
+    "all_words": all_words,
+    "tags": tags
+}
+
+FILE_JSON = "data.json"
+with open(FILE_JSON, "w", encoding="utf-8") as f:
+    json.dump(json_data, f, indent=4)
+
+print(f'training complete. JSON file saved to {FILE_JSON}')
+

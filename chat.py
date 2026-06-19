@@ -4,19 +4,18 @@ import re
 from difflib import SequenceMatcher
 from pathlib import Path
 
-import torch
+import numpy as np
 
-from model import NeuralNet
 from nltk_utils import bag_of_words, tokenize
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 BASE_DIR = Path(__file__).resolve().parent
 
 with open(BASE_DIR / 'intents.json', encoding='utf-8') as json_data:
     intents = json.load(json_data)
 
-FILE = BASE_DIR / "data.pth"
-data = torch.load(FILE, map_location=device)
+FILE = BASE_DIR / "data.json"
+with open(FILE, 'r', encoding='utf-8') as json_data:
+    data = json.load(json_data)
 
 input_size = data["input_size"]
 hidden_size = data["hidden_size"]
@@ -25,9 +24,27 @@ all_words = data['all_words']
 tags = data['tags']
 model_state = data["model_state"]
 
-model = NeuralNet(input_size, hidden_size, output_size).to(device)
-model.load_state_dict(model_state)
-model.eval()
+# Load weights and biases as NumPy arrays
+w1 = np.array(model_state["l1.weight"])
+b1 = np.array(model_state["l1.bias"])
+w2 = np.array(model_state["l2.weight"])
+b2 = np.array(model_state["l2.bias"])
+w3 = np.array(model_state["l3.weight"])
+b3 = np.array(model_state["l3.bias"])
+
+def relu(x):
+    return np.maximum(0, x)
+
+def forward(x):
+    # Layer 1
+    out = np.dot(x, w1.T) + b1
+    out = relu(out)
+    # Layer 2
+    out = np.dot(out, w2.T) + b2
+    out = relu(out)
+    # Layer 3
+    out = np.dot(out, w3.T) + b3
+    return out
 
 bot_name = "Sam"
 
@@ -86,17 +103,19 @@ def get_response(msg):
 
     sentence = tokenize(msg)
     X = bag_of_words(sentence, all_words)
-    X = X.reshape(1, X.shape[0])
-    X = torch.from_numpy(X).to(device)
+    # X is already a numpy array of shape (input_size,)
+    
+    output = forward(X)
+    predicted = np.argmax(output)
 
-    output = model(X)
-    _, predicted = torch.max(output, dim=1)
+    tag = tags[predicted]
 
-    tag = tags[predicted.item()]
-
-    probs = torch.softmax(output, dim=1)
-    prob = probs[0][predicted.item()]
-    if prob.item() > 0.75:
+    # Softmax in NumPy
+    exp_output = np.exp(output - np.max(output))
+    probs = exp_output / np.sum(exp_output)
+    prob = probs[predicted]
+    
+    if prob > 0.75:
         response = response_for_tag(tag)
         if response:
             return response
