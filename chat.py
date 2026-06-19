@@ -1,5 +1,6 @@
 import random
 import json
+from pathlib import Path
 
 import torch
 
@@ -7,12 +8,13 @@ from model import NeuralNet
 from nltk_utils import bag_of_words, tokenize
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+BASE_DIR = Path(__file__).resolve().parent
 
-with open('intents.json',  encoding='utf-8') as json_data:
+with open(BASE_DIR / 'intents.json', encoding='utf-8') as json_data:
     intents = json.load(json_data)
 
-FILE = "data.pth"
-data = torch.load(FILE)
+FILE = BASE_DIR / "data.pth"
+data = torch.load(FILE, map_location=device)
 
 input_size = data["input_size"]
 hidden_size = data["hidden_size"]
@@ -28,6 +30,9 @@ model.eval()
 bot_name = "Sam"
 
 def get_response(msg):
+    if not msg or not str(msg).strip():
+        return "Please type a message so I can help."
+
     sentence = tokenize(msg)
     X = bag_of_words(sentence, all_words)
     X = X.reshape(1, X.shape[0])

@@ -13,10 +13,10 @@
         "Start chat"
       ],
       "responses": [
-        "Welcome to Café Brew ☕ How can I help you today?",
+        "Welcome to Cafe Brew. How can I help you today?",
         "Hi there! Looking for a coffee recommendation or menu info?",
-        "Hello ☕ I’m here to help you explore our café.",
-        "Hey! What would you like today — coffee, tea, or something special?"
+        "Hello! I'm here to help you explore our cafe.",
+        "Hey! What would you like today - coffee, tea, or something special?"
       ]
     },
     {
@@ -30,10 +30,10 @@
         "Exit"
       ],
       "responses": [
-        "Thanks for visiting Café Brew ☕ See you next time!",
-        "Goodbye! Hope you enjoyed your café experience ☕",
-        "Take care! Come back anytime for your coffee cravings 😊",
-        "Bye! Have a relaxing day ahead ☕"
+        "Thanks for visiting Cafe Brew. See you next time!",
+        "Goodbye! Hope you enjoyed your cafe experience.",
+        "Take care! Come back anytime for your coffee cravings.",
+        "Bye! Have a relaxing day ahead."
       ]
     },
     {
@@ -47,10 +47,10 @@
         "Cool thanks"
       ],
       "responses": [
-        "You're welcome ☕ Happy to help!",
-        "Anytime 😊 Let me know if you need anything else.",
-        "Glad I could help! Enjoy your coffee experience ☕",
-        "My pleasure 😊"
+        "You're welcome. Happy to help!",
+        "Anytime. Let me know if you need anything else.",
+        "Glad I could help! Enjoy your coffee experience.",
+        "My pleasure."
       ]
     },
     {
@@ -65,10 +65,10 @@
         "Drink options"
       ],
       "responses": [
-        "We serve espresso, cappuccino, latte, mocha, cold brew, and a selection of teas ☕🍵",
-        "Our menu includes handcrafted coffees, iced drinks, and premium teas ☕",
-        "You can choose from espresso-based drinks, milk coffees, or refreshing cold brews ☕",
-        "We have a full café menu including hot coffee, iced drinks, and specialty beverages ☕"
+        "We serve espresso, cappuccino, latte, mocha, cold brew, and a selection of teas.",
+        "Our menu includes handcrafted coffees, iced drinks, and premium teas.",
+        "You can choose from espresso-based drinks, milk coffees, or refreshing cold brews.",
+        "We have a full cafe menu including hot coffee, iced drinks, and specialty beverages."
       ]
     },
     {
@@ -83,11 +83,11 @@
         "Help me choose a drink"
       ],
       "responses": [
-        "If you like strong coffee, try our Espresso ☕",
-        "Our Caramel Latte is smooth and very popular 😊",
-        "Cold Brew is great if you want something refreshing and bold ☕",
-        "Cappuccino is a perfect balanced choice with rich foam ☕",
-        "Mocha is great if you like chocolate with coffee 🍫☕"
+        "If you like strong coffee, try our Espresso.",
+        "Our Caramel Latte is smooth and very popular.",
+        "Cold Brew is great if you want something refreshing and bold.",
+        "Cappuccino is a balanced choice with rich foam.",
+        "Mocha is great if you like chocolate with coffee."
       ]
     },
     {
@@ -100,10 +100,10 @@
         "Order process"
       ],
       "responses": [
-        "You can browse our menu and select your favorite drink ☕",
-        "Ordering is simple — choose a drink and we’ll prepare it fresh for you 😊",
-        "Just pick your coffee preference and I’ll help guide you through it ☕",
-        "You can explore drinks and select what suits your taste ☕"
+        "You can browse our menu and select your favorite drink.",
+        "Ordering is simple - choose a drink and we'll prepare it fresh for you.",
+        "Just pick your coffee preference and I'll help guide you through it.",
+        "You can explore drinks and select what suits your taste."
       ]
     },
     {
@@ -116,10 +116,10 @@
         "Delivery time"
       ],
       "responses": [
-        "Delivery usually takes 20–40 minutes depending on your location ☕",
-        "We aim to deliver fresh coffee within 30 minutes 🚚",
-        "Your order will be prepared fresh and delivered as quickly as possible ☕",
-        "Fast delivery within city limits — usually under 40 minutes ☕"
+        "Delivery usually takes 20-40 minutes depending on your location.",
+        "We aim to deliver fresh coffee within 30 minutes.",
+        "Your order will be prepared fresh and delivered as quickly as possible.",
+        "Fast delivery within city limits - usually under 40 minutes."
       ]
     },
     {
@@ -132,24 +132,24 @@
         "Payment options"
       ],
       "responses": [
-        "We accept cash, card payments, and online wallets ☕",
-        "You can pay using credit/debit cards or digital payments 😊",
-        "Multiple payment options are available for your convenience ☕"
+        "We accept cash, card payments, and online wallets.",
+        "You can pay using credit/debit cards or digital payments.",
+        "Multiple payment options are available for your convenience."
       ]
     },
     {
       "tag": "location",
       "patterns": [
         "Where are you located?",
-        "Is this a real café?",
+        "Is this a real cafe?",
         "Do you have a shop?",
         "Address?",
         "Location"
       ],
       "responses": [
-        "We are a virtual café experience ☕ open anytime, anywhere.",
-        "Café Brew is a digital café — enjoy the experience online 😊",
-        "No physical shop yet, but always open for your coffee needs ☕"
+        "We are a virtual cafe experience, open anytime and anywhere.",
+        "Cafe Brew is a digital cafe - enjoy the experience online.",
+        "No physical shop yet, but we are always open for your coffee needs."
       ]
     },
     {
@@ -162,9 +162,9 @@
         "Working hours"
       ],
       "responses": [
-        "We’re open 24/7 ☕ Always here for your coffee cravings!",
-        "Café Brew never closes — feel free to chat anytime 😊",
-        "Available all day, every day ☕"
+        "We're open 24/7. Always here for your coffee cravings!",
+        "Cafe Brew never closes - feel free to chat anytime.",
+        "Available all day, every day."
       ]
     }
   ]

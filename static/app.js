@@ -2,6 +2,7 @@ class Chatbox {
     constructor() {
         this.args = {
             openButton: document.querySelector('.chatbox__button'),
+            chatboxRoot: document.querySelector('.chatbox'),
             chatBox: document.querySelector('.chatbox__support'),
             sendButton: document.querySelector('.send__button')
         }
@@ -10,9 +11,9 @@ class Chatbox {
     } 
     
     display() {
-        const {openButton, chatBox, sendButton} = this.args;
+        const {openButton, chatboxRoot, chatBox, sendButton} = this.args;
 
-        openButton.addEventListener('click', () => this.toggleState(chatBox));
+        openButton.addEventListener('click', () => this.toggleState(chatboxRoot));
         sendButton.addEventListener('click', () => this.onSendButton(chatBox));
         const node = chatBox.querySelector('input');
         node.addEventListener("keyup", ({key}) => {
@@ -22,19 +23,14 @@ class Chatbox {
         })    
     }
 
-    toggleState(chatbox) {
+    toggleState(chatboxRoot) {
         this.state = !this.state;
-        if(this.state) {
-            chatbox.classList.add('chatbox--active')
-        }
-        else {
-            chatbox.classList.remove('chatbox--active')
-        }
+        chatboxRoot.classList.toggle('chatbox--active', this.state);
     }
 
     onSendButton(chatbox) {
         var textField = chatbox.querySelector('input');
-        let text1 = textField.value;
+        let text1 = textField.value.trim();
         if (text1 === "") {
             return;
         }   
@@ -55,8 +51,10 @@ class Chatbox {
             this.updateChatText(chatbox)
             textField.value = '';
         })
-        .catch((error) => {  // Fixed: Changed {} to () for the error parameter
+        .catch((error) => {
             console.error('Error:', error);
+            let msg2 = { name: "Bot", message: "Sorry, I could not reach the chatbot right now." };
+            this.messages.push(msg2);
             this.updateChatText(chatbox)
             textField.value = '';
         });
@@ -65,11 +63,16 @@ class Chatbox {
     updateChatText(chatbox) {
         var html = '';
         this.messages.slice().reverse().forEach(function(item) {
+            const div = document.createElement('div');
+            div.className = item.name === "Bot"
+                ? 'messages__item messages__item--visitor'
+                : 'messages__item messages__item--operator';
+            div.textContent = item.message;
             if (item.name === "Bot") {
-                html += '<div class="messages__item messages__item--visitor">' + item.message + '</div>'
+                html += div.outerHTML
             }
             else {
-                html += '<div class="messages__item messages__item--operator">' + item.message + '</div>'
+                html += div.outerHTML
             }
         });
         const chatmessage = chatbox.querySelector('.chatbox__messages');

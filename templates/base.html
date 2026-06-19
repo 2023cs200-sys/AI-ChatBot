@@ -654,6 +654,34 @@
     overflow-y:auto;
     padding:18px 20px;
     background:var(--cream);
+    display:flex;
+    flex-direction:column-reverse;
+    gap:10px;
+  }
+
+  .messages__item{
+    max-width:78%;
+    width:fit-content;
+    padding:10px 13px;
+    border-radius:16px;
+    font-size:0.9rem;
+    line-height:1.35;
+    overflow-wrap:anywhere;
+  }
+
+  .messages__item--operator{
+    margin-left:auto;
+    background:var(--espresso);
+    color:var(--cream);
+    border-bottom-right-radius:6px;
+  }
+
+  .messages__item--visitor{
+    margin-right:auto;
+    background:#FBF7EF;
+    color:var(--deep-roast);
+    border:1px solid var(--line);
+    border-bottom-left-radius:6px;
   }
 
   .chatbox__footer{
@@ -907,26 +935,10 @@
   </div>
 </div>
 
-<!--
-  Chatbox UI only — wire up your real app.js here for message logic
-  (sending, receiving, rendering replies). This script only handles
-  the open/close toggle.
--->
     <script>
         $SCRIPT_ROOT = {{ request.script_root|tojson }};
     </script>
     <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
-    
-<script>
-  (function(){
-    const chatbox = document.getElementById('chatbox');
-    const toggleBtn = chatbox.querySelector('.chatbox__button button');
-
-    toggleBtn.addEventListener('click', () => {
-      chatbox.classList.toggle('chatbox--active');
-    });
-  })();
-</script>
 
 <script>
   // Navbar scroll state + pour progress line
