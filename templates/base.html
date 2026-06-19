@@ -36,6 +36,20 @@
     overflow-x:hidden;
   }
 
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .brand-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%; /* optional (makes it round) */
+  }
+
   h1,h2,h3{
     font-family:'Fraunces', serif;
     font-weight:600;
@@ -45,7 +59,7 @@
 
   a{text-decoration:none;color:inherit;}
   ul{list-style:none;}
-  img{max-width:100%;display:block;}
+  img{max-height:100%;display:block;}
 
   .wrap{
     max-width:var(--maxw);
@@ -273,32 +287,23 @@
     justify-content:center;
     height:420px;
   }
-  .cup-card{
-    position:relative;
-    width:100%;
-    max-width:340px;
-    aspect-ratio:1/1.05;
-    background:linear-gradient(165deg, #FBF7EF, var(--oat));
-    border-radius:28px;
-    box-shadow:var(--shadow);
-    display:flex;
-    align-items:flex-end;
-    justify-content:center;
-    overflow:hidden;
-    border:1px solid rgba(28,20,16,0.06);
+
+  /* Make image fill entire box */
+  .cup-glyph {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;   /* THIS is the key */
+    display: block;
   }
-  .cup-card .ring{
-    position:absolute;
-    top:24px; right:24px;
-    font-size:0.7rem;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color:var(--mocha-dark);
-    font-weight:600;
-    background:rgba(245,237,224,0.7);
-    padding:6px 12px;
-    border-radius:20px;
+
+  .cup-card {
+    width: 100%;
+    height: 100%;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
   }
+
   .steam{
     position:absolute;
     bottom:200px;
@@ -326,7 +331,8 @@
   }
 
   .cup-glyph{
-    width:160px;height:120px;
+    width:100%;
+    height:100%;
     margin-bottom:34px;
   }
 
@@ -727,10 +733,8 @@
 <nav class="navbar" id="navbar">
   <div class="nav-inner">
     <a href="#home" class="brand">
-      <span class="brand-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#FBF7EF" stroke-width="1.6"><path d="M4 9h13a3 3 0 010 6h-1M4 9v6a4 4 0 004 4h4a4 4 0 004-4V9M4 9V6h13v3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-      Hearth &amp; Cup
+      <img src="/static/images/logo.png" alt="Logo" class="brand-logo">
+      Cafe` Brew
     </a>
 
     <ul class="nav-links" id="navLinks">
@@ -753,7 +757,7 @@
   <div class="hero-inner">
     <div class="hero-copy">
       <span class="eyebrow">Small-batch roastery &amp; café</span>
-      <h1>Welcome to<br><em>Hearth &amp; Cup</em></h1>
+      <h1>Welcome to<br><em>Cafe` Brew</em></h1>
       <p class="lede">A warm corner of the city where slow mornings, hand-poured coffee, and good conversation are always on the menu.</p>
       <div class="hero-actions">
         <a href="#menu" class="btn-primary">
@@ -766,15 +770,7 @@
 
     <div class="hero-visual">
       <div class="cup-card">
-        <span class="ring">Medium Roast</span>
-        <div class="steam s1"></div>
-        <div class="steam s2"></div>
-        <div class="steam s3"></div>
-        <svg class="cup-glyph" viewBox="0 0 160 120" fill="none">
-          <path d="M20 40h100a18 18 0 010 36h-6" stroke="#2B1F18" stroke-width="3" stroke-linecap="round"/>
-          <path d="M20 40v34a26 26 0 0026 26h36a26 26 0 0026-26V40" stroke="#2B1F18" stroke-width="3" stroke-linecap="round"/>
-          <path d="M20 40h100" stroke="#8B5A3C" stroke-width="3" stroke-linecap="round"/>
-        </svg>
+        <img src="/static/images/coffee.png" alt="Cup" class="cup-glyph">
       </div>
     </div>
   </div>
@@ -783,12 +779,12 @@
 <section class="section about" id="about">
   <div class="about-grid">
     <div class="about-visual">
-      <div class="bean-row"><span>Single Origin</span><span>Roasted Weekly</span></div>
+        <img src="/static/images/cafe.png" alt="cafe" class="cafe">
     </div>
     <div class="about-copy">
       <span class="eyebrow">Our story</span>
       <h2 style="margin-top:14px;">Coffee, brewed with intention</h2>
-      <p>Hearth &amp; Cup started as a single roaster in a converted garage, chasing the idea that coffee tastes better when there's nowhere you need to be. That feeling is still the whole point.</p>
+      <p>Cafe` Brew started as a single roaster in a converted garage, chasing the idea that coffee tastes better when there's nowhere you need to be. That feeling is still the whole point.</p>
       <p>Every cup is poured by hand, every bean is roasted in small batches, and every table is set so a five-minute stop can turn into an hour without anyone minding.</p>
       <div class="about-stats">
         <div class="stat"><strong>12</strong><span>Origins on rotation</span></div>
@@ -851,7 +847,7 @@
   <div class="cta-band wrap">
     <h2>Pull up a chair. Your table's ready whenever you are.</h2>
     <a href="#home" class="btn-primary">
-      Visit Hearth &amp; Cup
+      Visit Cafe` Brew
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
   </div>
@@ -863,7 +859,7 @@
       <span class="brand-mark" style="width:28px;height:28px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="#FBF7EF" stroke-width="1.8" width="14" height="14"><path d="M4 9h13a3 3 0 010 6h-1M4 9v6a4 4 0 004 4h4a4 4 0 004-4V9M4 9V6h13v3" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
-      Hearth &amp; Cup
+      Cafe` Brew
     </a>
     <ul class="footer-links">
       <li><a href="#home">Home</a></li>
@@ -873,7 +869,7 @@
     </ul>
   </div>
   <div class="footer-bottom">
-    &copy; 2026 Hearth &amp; Cup Café. All rights reserved.
+    &copy; 2026 Cafe` Brew. All rights reserved.
   </div>
 </footer>
 
@@ -882,11 +878,10 @@
     <div class="chatbox__support">
       <div class="chatbox__header">
         <div class="chatbox__image--header">
-          <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-5--v1.png" alt="Sam, chat support">
+          <img src="/static/images/logo.png" alt="Sam, chat support">
         </div>
         <div class="chatbox__content--header">
-          <h4 class="chatbox__heading--header">Chat support</h4>
-          <p class="chatbox__description--header">Hi. My name is Sam. How can I help you?</p>
+          <p class="chatbox__description--header">Hi. I'm from Cafe` Brew. How can I help you?</p>
         </div>
       </div>
       <div class="chatbox__messages">
