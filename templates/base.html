@@ -1,42 +1,984 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Chatbot</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hearth & Cup — Roasted Daily, Served Warm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --espresso:#1C1410;
+    --deep-roast:#2B1F18;
+    --cream:#F5EDE0;
+    --oat:#E8DCC8;
+    --gold:#C9A876;
+    --mocha:#8B5A3C;
+    --mocha-dark:#6E4329;
+    --line: rgba(28,20,16,0.10);
+    --shadow: 0 10px 30px rgba(28,20,16,0.10);
+    --shadow-soft: 0 4px 14px rgba(28,20,16,0.08);
+    --radius: 18px;
+    --maxw: 1160px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family:'Inter', sans-serif;
+    background:var(--cream);
+    color:var(--deep-roast);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    color:var(--espresso);
+  }
+
+  a{text-decoration:none;color:inherit;}
+  ul{list-style:none;}
+  img{max-width:100%;display:block;}
+
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  .eyebrow{
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--mocha-dark);
+    font-weight:600;
+  }
+
+  :focus-visible{
+    outline:2px solid var(--mocha-dark);
+    outline-offset:3px;
+    border-radius:6px;
+  }
+
+  /* ---------- NAVBAR ---------- */
+  .navbar{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:100;
+    background:rgba(245,237,224,0.72);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid transparent;
+    transition:border-color .35s ease, background .35s ease, box-shadow .35s ease;
+  }
+  .navbar.scrolled{
+    border-bottom-color:var(--line);
+    box-shadow:0 6px 24px rgba(28,20,16,0.06);
+  }
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 28px;
+    max-width:var(--maxw);
+    margin:0 auto;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.25rem;
+    color:var(--espresso);
+  }
+  .brand-mark{
+    width:34px;height:34px;
+    border-radius:50%;
+    background:linear-gradient(160deg, var(--gold), var(--mocha));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,0.25);
+    flex-shrink:0;
+  }
+  .brand-mark svg{width:18px;height:18px;}
+
+  .nav-links{
+    display:flex;
+    gap:36px;
+  }
+  .nav-links a{
+    font-size:0.93rem;
+    font-weight:500;
+    color:var(--deep-roast);
+    position:relative;
+    padding:4px 0;
+    transition:color .25s ease;
+  }
+  .nav-links a::after{
+    content:"";
+    position:absolute;
+    left:0; bottom:-2px;
+    width:0%; height:2px;
+    background:var(--mocha-dark);
+    transition:width .3s ease;
+    border-radius:2px;
+  }
+  .nav-links a:hover::after,
+  .nav-links a.active::after{ width:100%; }
+  .nav-links a:hover{ color:var(--espresso); }
+
+  .nav-cta{
+    background:var(--espresso);
+    color:var(--cream);
+    padding:10px 20px;
+    border-radius:30px;
+    font-size:0.88rem;
+    font-weight:600;
+    transition:transform .25s ease, box-shadow .25s ease, background .25s ease;
+    box-shadow:var(--shadow-soft);
+  }
+  .nav-cta:hover{
+    transform:translateY(-2px);
+    background:var(--mocha-dark);
+    box-shadow:var(--shadow);
+  }
+
+  .nav-toggle{
+    display:none;
+    flex-direction:column;
+    gap:5px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:6px;
+  }
+  .nav-toggle span{
+    width:22px;height:2px;
+    background:var(--espresso);
+    border-radius:2px;
+    transition:transform .25s ease, opacity .25s ease;
+  }
+
+  /* pour progress line */
+  .pour-line{
+    position:absolute;
+    bottom:0; left:0;
+    height:2px;
+    width:0%;
+    background:linear-gradient(90deg, var(--gold), var(--mocha-dark));
+    transition:width .1s linear;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:168px 28px 120px;
+    overflow:hidden;
+    isolation:isolate;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:-20% -10% auto -10%;
+    height:780px;
+    background:
+      radial-gradient(60% 55% at 28% 20%, rgba(201,168,118,0.55), transparent 70%),
+      radial-gradient(55% 50% at 78% 10%, rgba(139,90,60,0.35), transparent 70%),
+      radial-gradient(70% 60% at 50% 60%, rgba(232,220,200,0.9), transparent 75%);
+    filter:blur(10px);
+    z-index:-1;
+  }
+  .hero-inner{
+    max-width:var(--maxw);
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:60px;
+    align-items:center;
+  }
+  .hero-copy .eyebrow{ margin-bottom:18px; display:inline-block; }
+  .hero h1{
+    font-size:clamp(2.6rem, 5.2vw, 4.4rem);
+    line-height:1.04;
+    margin-bottom:22px;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--mocha-dark);
+    font-weight:500;
+  }
+  .hero p.lede{
+    font-size:1.13rem;
+    color:#4A3B30;
+    max-width:480px;
+    margin-bottom:34px;
+  }
+  .hero-actions{
+    display:flex;
+    gap:16px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+
+  .btn-primary{
+    background:var(--espresso);
+    color:var(--cream);
+    padding:16px 32px;
+    border-radius:40px;
+    font-weight:600;
+    font-size:0.98rem;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    border:none;
+    cursor:pointer;
+    transition:transform .3s ease, box-shadow .3s ease, background .3s ease;
+    box-shadow:var(--shadow);
+  }
+  .btn-primary:hover{
+    transform:translateY(-3px);
+    background:var(--mocha-dark);
+  }
+  .btn-primary svg{
+    transition:transform .3s ease;
+  }
+  .btn-primary:hover svg{ transform:translateX(4px); }
+
+  .btn-secondary{
+    padding:16px 26px;
+    border-radius:40px;
+    font-weight:600;
+    font-size:0.98rem;
+    color:var(--espresso);
+    border:1.5px solid rgba(28,20,16,0.22);
+    transition:border-color .3s ease, background .3s ease;
+  }
+  .btn-secondary:hover{
+    border-color:var(--espresso);
+    background:rgba(28,20,16,0.05);
+  }
+
+  /* hero visual: cup + steam signature element */
+  .hero-visual{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:420px;
+  }
+  .cup-card{
+    position:relative;
+    width:100%;
+    max-width:340px;
+    aspect-ratio:1/1.05;
+    background:linear-gradient(165deg, #FBF7EF, var(--oat));
+    border-radius:28px;
+    box-shadow:var(--shadow);
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    overflow:hidden;
+    border:1px solid rgba(28,20,16,0.06);
+  }
+  .cup-card .ring{
+    position:absolute;
+    top:24px; right:24px;
+    font-size:0.7rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--mocha-dark);
+    font-weight:600;
+    background:rgba(245,237,224,0.7);
+    padding:6px 12px;
+    border-radius:20px;
+  }
+  .steam{
+    position:absolute;
+    bottom:200px;
+    width:6px;
+    border-radius:6px;
+    background:linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.55));
+    filter:blur(2px);
+    opacity:0;
+    animation:rise 4.5s ease-in infinite;
+  }
+  .steam.s1{ left:46%; height:90px; animation-delay:.2s; }
+  .steam.s2{ left:52%; height:70px; animation-delay:1.4s; }
+  .steam.s3{ left:49%; height:60px; animation-delay:2.6s; }
+
+  @keyframes rise{
+    0%{ transform:translateY(0) scaleX(1); opacity:0; }
+    15%{ opacity:0.7; }
+    70%{ opacity:0.25; }
+    100%{ transform:translateY(-160px) scaleX(1.6); opacity:0; }
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .steam{ animation:none; opacity:0.3; }
+    html{ scroll-behavior:auto; }
+  }
+
+  .cup-glyph{
+    width:160px;height:120px;
+    margin-bottom:34px;
+  }
+
+  /* ---------- SECTION HEADERS ---------- */
+  .section{
+    padding:108px 28px;
+  }
+  .section-head{
+    max-width:620px;
+    margin-bottom:56px;
+  }
+  .section-head .eyebrow{ display:block; margin-bottom:14px; }
+  .section-head h2{
+    font-size:clamp(2rem, 3.4vw, 2.8rem);
+    line-height:1.12;
+  }
+  .section-head p{
+    margin-top:16px;
+    color:#4A3B30;
+    font-size:1.05rem;
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about{
+    background:var(--oat);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .about-grid{
+    display:grid;
+    grid-template-columns:0.85fr 1.15fr;
+    gap:64px;
+    align-items:center;
+    max-width:var(--maxw);
+    margin:0 auto;
+  }
+  .about-visual{
+    position:relative;
+    border-radius:var(--radius);
+    overflow:hidden;
+    aspect-ratio:4/5;
+    background:linear-gradient(160deg, var(--mocha), var(--espresso));
+    box-shadow:var(--shadow);
+  }
+  .about-visual::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(120px 120px at 20% 25%, rgba(255,255,255,0.12), transparent 60%),
+      radial-gradient(160px 160px at 85% 80%, rgba(255,255,255,0.08), transparent 60%);
+  }
+  .about-visual .bean-row{
+    position:absolute;
+    bottom:28px; left:28px; right:28px;
+    display:flex;
+    justify-content:space-between;
+    color:rgba(245,237,224,0.85);
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-weight:600;
+  }
+  .about-copy h2{
+    font-size:clamp(1.8rem, 3vw, 2.4rem);
+    margin-bottom:20px;
+    line-height:1.18;
+  }
+  .about-copy p{
+    color:#4A3B30;
+    font-size:1.04rem;
+    max-width:520px;
+  }
+  .about-copy p + p{ margin-top:16px; }
+  .about-stats{
+    display:flex;
+    gap:40px;
+    margin-top:36px;
+    flex-wrap:wrap;
+  }
+  .stat strong{
+    display:block;
+    font-family:'Fraunces', serif;
+    font-size:1.9rem;
+    color:var(--espresso);
+  }
+  .stat span{
+    font-size:0.84rem;
+    color:var(--mocha-dark);
+    font-weight:500;
+  }
+
+  /* ---------- FEATURES ---------- */
+  .features-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:24px;
+    max-width:var(--maxw);
+    margin:0 auto;
+  }
+  .feature-card{
+    background:#FBF7EF;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:32px 26px;
+    transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+    position:relative;
+  }
+  .feature-card:hover{
+    transform:translateY(-6px);
+    box-shadow:var(--shadow);
+    border-color:rgba(139,90,60,0.3);
+  }
+  .roast-dots{
+    display:flex;
+    gap:4px;
+    margin-bottom:20px;
+  }
+  .roast-dots span{
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--line);
+  }
+  .roast-dots span.filled{ background:var(--mocha-dark); }
+
+  .feature-icon{
+    width:46px;height:46px;
+    border-radius:12px;
+    background:linear-gradient(160deg, var(--gold), var(--mocha));
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:20px;
+  }
+  .feature-icon svg{ width:22px;height:22px; color:#FBF7EF; }
+
+  .feature-card h3{
+    font-size:1.18rem;
+    margin-bottom:10px;
+  }
+  .feature-card p{
+    font-size:0.95rem;
+    color:#5A4A3C;
+  }
+
+  /* ---------- CTA BAND ---------- */
+  .cta-band{
+    background:var(--espresso);
+    border-radius:28px;
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:64px 56px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:40px;
+    flex-wrap:wrap;
+    box-shadow:var(--shadow);
+  }
+  .cta-band h2{
+    color:var(--cream);
+    font-size:clamp(1.7rem, 2.8vw, 2.2rem);
+    max-width:460px;
+    line-height:1.2;
+  }
+  .cta-band .btn-primary{
+    background:var(--gold);
+    color:var(--espresso);
+  }
+  .cta-band .btn-primary:hover{ background:var(--cream); }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:48px 28px 32px;
+  }
+  .footer-inner{
+    max-width:var(--maxw);
+    margin:0 auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+  }
+  .footer-brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    color:var(--espresso);
+  }
+  .footer-links{
+    display:flex;
+    gap:28px;
+  }
+  .footer-links a{
+    font-size:0.9rem;
+    color:#5A4A3C;
+    transition:color .25s ease;
+  }
+  .footer-links a:hover{ color:var(--espresso); }
+  .footer-copy{
+    font-size:0.85rem;
+    color:#7A6A5C;
+  }
+  .footer-bottom{
+    margin-top:28px;
+    padding-top:24px;
+    border-top:1px solid var(--line);
+    text-align:center;
+    font-size:0.84rem;
+    color:#7A6A5C;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:920px){
+    .hero-inner{ grid-template-columns:1fr; }
+    .hero-visual{ height:340px; order:-1; }
+    .about-grid{ grid-template-columns:1fr; }
+    .about-visual{ aspect-ratio:16/9; }
+    .features-grid{ grid-template-columns:repeat(2, 1fr); }
+  }
+
+  @media (max-width:720px){
+    .nav-links{
+      position:absolute;
+      top:100%; left:0; right:0;
+      background:var(--cream);
+      flex-direction:column;
+      padding:20px 28px 28px;
+      gap:18px;
+      border-bottom:1px solid var(--line);
+      box-shadow:0 16px 24px rgba(28,20,16,0.08);
+      transform:translateY(-12px);
+      opacity:0;
+      pointer-events:none;
+      transition:transform .28s ease, opacity .28s ease;
+    }
+    .nav-links.open{
+      transform:translateY(0);
+      opacity:1;
+      pointer-events:auto;
+    }
+    .nav-cta{ display:none; }
+    .nav-toggle{ display:flex; }
+    .nav-toggle.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2){ opacity:0; }
+    .nav-toggle.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+    .hero{ padding-top:140px; }
+    .section{ padding:80px 20px; }
+    .cta-band{ padding:44px 28px; flex-direction:column; text-align:center; }
+    .footer-inner{ flex-direction:column; text-align:center; }
+  }
+
+  @media (max-width:560px){
+    .features-grid{ grid-template-columns:1fr; }
+    .hero-actions{ flex-direction:column; align-items:flex-start; width:100%; }
+    .btn-primary, .btn-secondary{ width:100%; justify-content:center; text-align:center; }
+  }
+
+  /* ================= CHATBOX WIDGET ================= */
+  .container{ position:relative; }
+
+  .chatbox{
+    position:fixed;
+    bottom:24px;
+    right:24px;
+    z-index:999;
+    font-family:'Inter', sans-serif;
+  }
+
+  .chatbox__support{
+    width:330px;
+    max-height:0;
+    overflow:hidden;
+    background:#FBF7EF;
+    border-radius:18px;
+    box-shadow:0 14px 36px rgba(28,20,16,0.22);
+    border:1px solid rgba(28,20,16,0.08);
+    margin-bottom:16px;
+    opacity:0;
+    transform:translateY(12px);
+    transition:opacity .28s ease, transform .28s ease, max-height .35s ease;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .chatbox--active .chatbox__support{
+    max-height:480px;
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  .chatbox__header{
+    background:linear-gradient(135deg, var(--mocha), var(--espresso));
+    padding:18px 20px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    border-radius:18px 18px 0 0;
+  }
+  .chatbox__image--header img{
+    width:42px;height:42px;
+    border-radius:50%;
+    background:#fff;
+    padding:2px;
+  }
+  .chatbox__heading--header{
+    color:var(--cream);
+    font-family:'Fraunces', serif;
+    font-size:1.02rem;
+    font-weight:600;
+    margin-bottom:2px;
+  }
+  .chatbox__description--header{
+    color:rgba(245,237,224,0.8);
+    font-size:0.82rem;
+  }
+
+  .chatbox__messages{
+    flex:1;
+    min-height:240px;
+    max-height:240px;
+    overflow-y:auto;
+    padding:18px 20px;
+    background:var(--cream);
+  }
+
+  .chatbox__footer{
+    display:flex;
+    gap:8px;
+    padding:14px 16px;
+    background:#FBF7EF;
+    border-top:1px solid var(--line);
+    border-radius:0 0 18px 18px;
+  }
+  .chatbox__footer input{
+    flex:1;
+    border:1px solid var(--line);
+    border-radius:24px;
+    padding:10px 16px;
+    font-size:0.9rem;
+    font-family:inherit;
+    background:#fff;
+    color:var(--deep-roast);
+  }
+  .chatbox__footer input:focus{
+    outline:none;
+    border-color:var(--mocha-dark);
+  }
+  .chatbox__send--footer{
+    background:var(--espresso);
+    color:var(--cream);
+    border:none;
+    border-radius:24px;
+    padding:10px 18px;
+    font-size:0.86rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:background .25s ease;
+  }
+  .chatbox__send--footer:hover{ background:var(--mocha-dark); }
+
+  .chatbox__button{
+    display:flex;
+    justify-content:flex-end;
+  }
+  .chatbox__button button{
+    width:58px;height:58px;
+    border-radius:50%;
+    border:none;
+    background:linear-gradient(160deg, var(--gold), var(--mocha));
+    box-shadow:var(--shadow);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .chatbox__button button:hover{
+    transform:translateY(-3px) scale(1.04);
+    box-shadow:0 14px 30px rgba(28,20,16,0.3);
+  }
+  .chatbox__button img,
+  .chatbox__button svg{
+    width:26px;height:26px;
+  }
+
+  @media (max-width:480px){
+    .chatbox{ bottom:16px; right:16px; left:16px; }
+    .chatbox__support{ width:100%; }
+  }
+</style>
 </head>
 <body>
-<div class="container">
-    <div class="chatbox">
-        <div class="chatbox__support">
-            <div class="chatbox__header">
-                <div class="chatbox__image--header">
-                    <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-5--v1.png" alt="image">
-                </div>
-                <div class="chatbox__content--header">
-                    <h4 class="chatbox__heading--header">Chat support</h4>
-                    <p class="chatbox__description--header">Hi. My name is Sam. How can I help you?</p>
-                </div>
-            </div>
-            <div class="chatbox__messages">
-                <div></div>
-            </div>
-            <div class="chatbox__footer">
-                <input type="text" placeholder="Write a message...">
-                <button class="chatbox__send--footer send__button">Send</button>
-            </div>
-        </div>
-        <div class="chatbox__button">
-            <button><img src="{{ url_for('static', filename='images/chatbox-icon.svg') }}" /></button>
-        </div>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="#home" class="brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FBF7EF" stroke-width="1.6"><path d="M4 9h13a3 3 0 010 6h-1M4 9v6a4 4 0 004 4h4a4 4 0 004-4V9M4 9V6h13v3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      Hearth &amp; Cup
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" class="active">Home</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <a href="#menu" class="nav-cta">Explore Café</a>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="pour-line" id="pourLine"></div>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow">Small-batch roastery &amp; café</span>
+      <h1>Welcome to<br><em>Hearth &amp; Cup</em></h1>
+      <p class="lede">A warm corner of the city where slow mornings, hand-poured coffee, and good conversation are always on the menu.</p>
+      <div class="hero-actions">
+        <a href="#menu" class="btn-primary">
+          Explore Café
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#about" class="btn-secondary">Our Story</a>
+      </div>
     </div>
+
+    <div class="hero-visual">
+      <div class="cup-card">
+        <span class="ring">Medium Roast</span>
+        <div class="steam s1"></div>
+        <div class="steam s2"></div>
+        <div class="steam s3"></div>
+        <svg class="cup-glyph" viewBox="0 0 160 120" fill="none">
+          <path d="M20 40h100a18 18 0 010 36h-6" stroke="#2B1F18" stroke-width="3" stroke-linecap="round"/>
+          <path d="M20 40v34a26 26 0 0026 26h36a26 26 0 0026-26V40" stroke="#2B1F18" stroke-width="3" stroke-linecap="round"/>
+          <path d="M20 40h100" stroke="#8B5A3C" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section about" id="about">
+  <div class="about-grid">
+    <div class="about-visual">
+      <div class="bean-row"><span>Single Origin</span><span>Roasted Weekly</span></div>
+    </div>
+    <div class="about-copy">
+      <span class="eyebrow">Our story</span>
+      <h2 style="margin-top:14px;">Coffee, brewed with intention</h2>
+      <p>Hearth &amp; Cup started as a single roaster in a converted garage, chasing the idea that coffee tastes better when there's nowhere you need to be. That feeling is still the whole point.</p>
+      <p>Every cup is poured by hand, every bean is roasted in small batches, and every table is set so a five-minute stop can turn into an hour without anyone minding.</p>
+      <div class="about-stats">
+        <div class="stat"><strong>12</strong><span>Origins on rotation</span></div>
+        <div class="stat"><strong>6am</strong><span>Doors open daily</span></div>
+        <div class="stat"><strong>100%</strong><span>Direct trade beans</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="menu">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Why people stay</span>
+      <h2>The little things we get right</h2>
+      <p>None of this is flashy. It's just done with care, every single day, so the café feels the same whether you're here at sunrise or closing time.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="roast-dots"><span class="filled"></span><span class="filled"></span><span class="filled"></span><span></span></div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Quick, no-rush service</h3>
+        <p>Orders move fast at the counter so your coffee never gets in the way of your conversation.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="roast-dots"><span class="filled"></span><span class="filled"></span><span></span><span></span></div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v9a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>A genuinely cozy room</h3>
+        <p>Soft lighting, worn wood tables, and corners built for lingering over a second cup.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="roast-dots"><span class="filled"></span><span class="filled"></span><span class="filled"></span><span class="filled"></span></div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Baristas who know your order</h3>
+        <p>Regulars get remembered, and newcomers get walked through the menu without the jargon.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="roast-dots"><span class="filled"></span><span></span><span></span><span></span></div>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Open early, open late</h3>
+        <p>From the first commuter to the last night-owl, the espresso machine doesn't stop running.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="cta-band wrap">
+    <h2>Pull up a chair. Your table's ready whenever you are.</h2>
+    <a href="#home" class="btn-primary">
+      Visit Hearth &amp; Cup
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a href="#home" class="footer-brand">
+      <span class="brand-mark" style="width:28px;height:28px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FBF7EF" stroke-width="1.8" width="14" height="14"><path d="M4 9h13a3 3 0 010 6h-1M4 9v6a4 4 0 004 4h4a4 4 0 004-4V9M4 9V6h13v3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      Hearth &amp; Cup
+    </a>
+    <ul class="footer-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    &copy; 2026 Hearth &amp; Cup Café. All rights reserved.
+  </div>
+</footer>
+
+<div class="container">
+  <div class="chatbox" id="chatbox">
+    <div class="chatbox__support">
+      <div class="chatbox__header">
+        <div class="chatbox__image--header">
+          <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-5--v1.png" alt="Sam, chat support">
+        </div>
+        <div class="chatbox__content--header">
+          <h4 class="chatbox__heading--header">Chat support</h4>
+          <p class="chatbox__description--header">Hi. My name is Sam. How can I help you?</p>
+        </div>
+      </div>
+      <div class="chatbox__messages">
+        <div></div>
+      </div>
+      <div class="chatbox__footer">
+        <input type="text" placeholder="Write a message...">
+        <button class="chatbox__send--footer send__button">Send</button>
+      </div>
+    </div>
+    <div class="chatbox__button">
+      <button aria-label="Open chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FBF7EF" stroke-width="2">
+          <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
 </div>
 
+<!--
+  Chatbox UI only — wire up your real app.js here for message logic
+  (sending, receiving, rendering replies). This script only handles
+  the open/close toggle.
+-->
     <script>
         $SCRIPT_ROOT = {{ request.script_root|tojson }};
     </script>
     <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
+    
+<script>
+  (function(){
+    const chatbox = document.getElementById('chatbox');
+    const toggleBtn = chatbox.querySelector('.chatbox__button button');
+
+    toggleBtn.addEventListener('click', () => {
+      chatbox.classList.toggle('chatbox--active');
+    });
+  })();
+</script>
+
+<script>
+  // Navbar scroll state + pour progress line
+  const navbar = document.getElementById('navbar');
+  const pourLine = document.getElementById('pourLine');
+
+  function onScroll(){
+    const scrolled = window.scrollY > 12;
+    navbar.classList.toggle('scrolled', scrolled);
+
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+    pourLine.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  // Active nav link highlight on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navAnchors = document.querySelectorAll('.nav-links a');
+
+  function setActiveLink(){
+    let current = sections[0]?.id;
+    const offset = 140;
+    sections.forEach(sec => {
+      if (window.scrollY + offset >= sec.offsetTop) current = sec.id;
+    });
+    navAnchors.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+  window.addEventListener('scroll', setActiveLink, { passive:true });
+  setActiveLink();
+
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+
+  navToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    navToggle.classList.toggle('open', isOpen);
+    navToggle.setAttribute('aria-expanded', isOpen);
+  });
+
+  navAnchors.forEach(a => {
+    a.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      navToggle.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', false);
+    });
+  });
+</script>
 
 </body>
 </html>
